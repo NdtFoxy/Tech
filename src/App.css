@@ -1,0 +1,169 @@
+:root {
+  --primary: #0056b3; 
+  --bg: #f8f9fa;
+  --white: #ffffff;
+  --text: #333333;
+  --danger: #dc3545;
+  --success: #198754;
+  --hover-row: #e9ecef;
+  --highlight-row: #cfe2ff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 95%; /* Теперь почти во всю ширину */
+  max-width: 1400px;
+  margin: 40px auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  color: var(--primary);
+  font-size: 24px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.nav-buttons button {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  font-weight: bold;
+  padding: 8px 20px;
+  cursor: pointer;
+}
+
+.nav-buttons button.active {
+  background: var(--primary);
+  color: white;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 250px;
+  outline: none;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  min-width: 800px; /* Чтобы не сжималась слишком сильно */
+}
+
+.results-table th, 
+.results-table td {
+  padding: 8px 8px; /* Меньше отступы */
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 13px; /* Меньше шрифт */
+}
+
+.results-table th {
+  background-color: #e9ecef;
+  color: #495057;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ranking-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.ranking-table th.sortable:hover {
+  background-color: #dee2e6;
+}
+
+.ranking-table tbody tr {
+  cursor: pointer;
+}
+
+.ranking-table tbody tr:hover {
+  background-color: var(--hover-row);
+}
+
+.ranking-table tbody tr.highlighted-row {
+  background-color: var(--highlight-row);
+}
+
+.small-th {
+  text-align: center !important;
+  width: 40px;
+}
+
+.ranking-table td {
+  text-align: center;
+}
+.ranking-table td:first-child {
+  text-align: left;
+}
+
+.text-red { color: var(--danger); font-weight: bold; }
+.text-green { color: var(--success); }
+.muted { color: #ccc; }
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+}
+
+.badge.green { background-color: var(--success); }
+.badge.red { background-color: var(--danger); }
+.badge.gray { background-color: #6c757d; }
+
+.summary-card {
+  background: var(--white);
+  padding: 15px 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loading, .error-msg {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+}
+.error-msg { color: var(--danger); background: #f8d7da; border-radius: 4px; }

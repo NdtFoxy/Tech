@@ -1,3 +1,4 @@
+/* Zmienne globalne dla kolorystyki */
 :root {
   --primary: #0056b3; 
   --bg: #f8f9fa;
@@ -20,7 +21,7 @@ body {
 }
 
 .container {
-  width: 95%; /* Теперь почти во всю ширину */
+  width: 95%; 
   max-width: 1400px;
   margin: 40px auto;
 }
@@ -36,6 +37,7 @@ h1 {
   font-size: 24px;
 }
 
+/* Style przycisków nawigacyjnych */
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -56,6 +58,7 @@ h1 {
   color: white;
 }
 
+/* Pole wyszukiwania */
 .search-box {
   display: flex;
   justify-content: center;
@@ -71,6 +74,7 @@ input {
   outline: none;
 }
 
+/* Obsługa przewijania tabeli na małych ekranach */
 .table-wrapper {
   overflow-x: auto;
   background: white;
@@ -82,17 +86,18 @@ input {
   width: 100%;
   border-collapse: collapse;
   background: var(--white);
-  min-width: 800px; /* Чтобы не сжималась слишком сильно */
+  min-width: 800px; 
 }
 
 .results-table th, 
 .results-table td {
-  padding: 8px 8px; /* Меньше отступы */
+  padding: 8px 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
-  font-size: 13px; /* Меньше шрифт */
+  font-size: 13px; 
 }
 
+/* Wygląd nagłówków i sortowania */
 .results-table th {
   background-color: #e9ecef;
   color: #495057;
@@ -109,6 +114,7 @@ input {
   background-color: #dee2e6;
 }
 
+/* Style interakcji z wierszami */
 .ranking-table tbody tr {
   cursor: pointer;
 }
@@ -133,10 +139,12 @@ input {
   text-align: left;
 }
 
+/* Kolory statusów tekstowych */
 .text-red { color: var(--danger); font-weight: bold; }
 .text-green { color: var(--success); }
 .muted { color: #ccc; }
 
+/* Style odznak (Badges) */
 .badge {
   padding: 4px 8px;
   border-radius: 4px;
@@ -150,6 +158,7 @@ input {
 .badge.red { background-color: var(--danger); }
 .badge.gray { background-color: #6c757d; }
 
+/* Karta podsumowania w widoku szczegółów */
 .summary-card {
   background: var(--white);
   padding: 15px 20px;
@@ -161,6 +170,7 @@ input {
   align-items: center;
 }
 
+/* Komunikaty systemowe */
 .loading, .error-msg {
     text-align: center;
     padding: 20px;

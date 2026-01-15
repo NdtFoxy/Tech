@@ -2,26 +2,31 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [view, setView] = useState('ranking');
-  const [tasks, setTasks] = useState([]);
-  const [allResults, setAllResults] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // --- STANY APLIKACJI ---
+  const [view, setView] = useState('ranking'); // Przełącznik widoku: 'ranking' lub 'detail'
+  const [tasks, setTasks] = useState([]); // Lista dostępnych zadań
+  const [allResults, setAllResults] = useState({}); // Wyniki wszystkich studentów (obiekt)
+  const [loading, setLoading] = useState(false); // Stan ładowania danych
+  const [error, setError] = useState(null); // Przechowywanie komunikatów o błędach
   
-  const [selectedStudentId, setSelectedStudentId] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'score', direction: 'desc' });
-  const [highlightedRow, setHighlightedRow] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(''); // ID obecnie przeglądanego studenta
+  const [sortConfig, setSortConfig] = useState({ key: 'score', direction: 'desc' }); // Konfiguracja sortowania tabeli
+  const [highlightedRow, setHighlightedRow] = useState(null); // ID ostatnio klikniętego wiersza w rankingu
 
+  // --- POBIERANIE DANYCH Z SERWERA ---
   useEffect(function() {
     async function fetchData() {
       setLoading(true);
       try {
+        // Pobieranie definicji zadań
         const tasksResponse = await fetch('/tin/tasks');
         const tasksData = await tasksResponse.json();
         
+        // Pobieranie wyników studentów
         const resultsResponse = await fetch('/tin/results');
         const resultsData = await resultsResponse.json();
 
+        // Przekształcenie obiektu zadań na tablicę dla łatwiejszego renderowania
         const tasksArray = [];
         for (const key in tasksData) {
           tasksArray.push({
@@ -41,16 +46,20 @@ function App() {
     fetchData();
   }, []);
 
+  // --- OBSŁUGA SORTOWANIA ---
   function handleSort(key) {
     let direction = 'desc';
+    // Jeśli kliknięto tę samą kolumnę, która jest już sortowana, odwróć kierunek
     if (sortConfig.key === key && sortConfig.direction === 'desc') {
       direction = 'asc';
     }
     setSortConfig({ key: key, direction: direction });
   }
 
+  // --- LOGIKA RANKINGU (SORTOWANIE I PRZYGOTOWANIE DANYCH) ---
   function getSortedRanking() {
     const data = [];
+    // Konwersja obiektu wyników na tablicę obiektów
     for (const id in allResults) {
       data.push({
         id: id,
@@ -59,6 +68,7 @@ function App() {
       });
     }
 
+    // Sortowanie danych na podstawie konfiguracji sortConfig
     data.sort(function(a, b) {
       let valA;
       let valB;
@@ -70,6 +80,7 @@ function App() {
         valA = a.totalScore;
         valB = b.totalScore;
       } else {
+        // Sortowanie po konkretnym zadaniu
         const taskKey = sortConfig.key;
         valA = a.tasks[taskKey] ? a.tasks[taskKey].score : 0;
         valB = b.tasks[taskKey] ? b.tasks[taskKey].score : 0;
@@ -87,6 +98,7 @@ function App() {
     return data;
   }
 
+  // --- LOGIKA SZCZEGÓŁÓW STUDENTA ---
   function getStudentDetailData() {
     if (!selectedStudentId || !allResults[selectedStudentId]) {
       return [];
@@ -94,6 +106,7 @@ function App() {
     
     const studentData = allResults[selectedStudentId];
     
+    // Mapowanie wszystkich zadań i sprawdzanie, czy dany student je oddał i czy w terminie
     return tasks.map(function(task) {
       const studentResult = studentData.tasks ? studentData.tasks[task.id] : null;
       let status = "brak"; 
@@ -104,7 +117,7 @@ function App() {
           const completionDate = new Date(studentResult.time);
           const deadlineDate = new Date(task.Deadline);
           if (completionDate > deadlineDate) {
-            isLate = true;
+            isLate = true; // Flaga spóźnienia
           }
       }
 
@@ -121,10 +134,12 @@ function App() {
   const sortedRanking = getSortedRanking();
   const studentDetailData = getStudentDetailData();
 
+  // --- RENDEROWANIE INTERFEJSU ---
   return (
     <div className="container">
       <header>
         <h1>Sprawdzarka Wyników TIN</h1>
+        {/* Przełącznik widoków */}
         <div className="nav-buttons">
             <button 
                 className={view === 'ranking' ? 'active' : ''} 
@@ -139,9 +154,11 @@ function App() {
         </div>
       </header>
 
+      {/* Komunikaty stanu */}
       {loading && <div className="loading">Ładowanie danych...</div>}
       {error && <div className="error-msg">{error}</div>}
 
+      {/* WIDOK: RANKING */}
       {!loading && view === 'ranking' && (
         <div className="ranking-container">
             <div className="table-wrapper">
@@ -154,6 +171,7 @@ function App() {
                         <th onClick={function() { handleSort('score'); }} className="sortable">
                             Suma
                         </th>
+                        {/* Dynamiczne kolumny dla każdego zadania */}
                         {tasks.map(function(task) {
                             return (
                                 <th key={task.id} onClick={function() { handleSort(task.id); }} className="sortable small-th">
@@ -186,6 +204,7 @@ function App() {
                                       if (t1 > t2) isLate = true;
                                     }
 
+                                    // Klasy kolorystyczne dla wyników
                                     let cellClass = 'muted';
                                     if (taskData) {
                                       cellClass = isLate ? 'text-red' : 'text-green';
@@ -206,6 +225,7 @@ function App() {
         </div>
       )}
 
+      {/* WIDOK: SZCZEGÓŁY STUDENTA */}
       {!loading && view === 'detail' && (
         <div className="detail-view">
              <div className="search-box">
@@ -219,11 +239,13 @@ function App() {
 
             {selectedStudentId && allResults[selectedStudentId] ? (
                  <div className="results-container">
+                    {/* Karta podsumowania */}
                     <div className="summary-card">
                         <h2>Suma punktów: <span className="highlight">{allResults[selectedStudentId].score}</span></h2>
                         <p>Student ID: {selectedStudentId}</p>
                     </div>
 
+                    {/* Szczegółowa tabela zadań studenta */}
                     <table className="results-table">
                         <thead>
                             <tr>
@@ -249,6 +271,7 @@ function App() {
                                             <b>{item.studentPoints}</b> / {item.Score}
                                         </td>
                                         <td>
+                                            {/* Odznaki statusu */}
                                             {item.status === 'brak' && <span className="badge gray">Brak</span>}
                                             {item.status === 'oddano' && !item.isLate && <span className="badge green">W terminie</span>}
                                             {item.status === 'oddano' && item.isLate && <span className="badge red">Opóźnienie</span>}
